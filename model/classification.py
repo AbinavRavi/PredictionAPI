@@ -1,18 +1,29 @@
 import numpy as np
 import pandas as pd
-from sklearn import train_test_split
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, roc_auc_score
 
-class classification_model:
-    def __init__(self,dataset_path):
-        self.dataset_path = dataset_path
-        self.data = pd.read_csv(self.dataset_path)
+def  read_data(dataset_path):
+    data = pd.read_csv(dataset_path)
+    return data
 
-    def __preprocess(self):
-        df = self.data
-        features = df.drop(['Unnamed: 32','id'],axis=1)
-        labels = df['diagnosis']
-        return features,labels
+def preprocess(data):
+    df = data
+    features = df.drop(['Unnamed: 32','id'],axis=1)
+    labels = df['diagnosis']
+    return features,labels
 
-    def model(self,train_data,train_labels):
-        
+def split_data(features,labels):
+    train_data,test_data,train_labels,test_labels = train_test_split(features,labels,test_size=0.2)
+    return train_data,test_data,train_labels,test_labels
+
+def train_model(train_data,train_labels,test_data,test_labels):
+    model = LogisticRegression(penalty='l1')
+    model.fit(train_data,train_labels)
+    predictions = model.predict(test_data)
+    return predictions
+
+
+
 
